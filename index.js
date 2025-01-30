@@ -4,6 +4,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const logoutRoutes = require('./routes/logoutRoutes');
 const logger = require('./config/logger');
+const authLoginConsumer = require('./consumers/authLoginConsumer');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -22,6 +23,10 @@ const swaggerOptions = {
     },
     apis: ['./routes/*.js']
 };
+
+authLoginConsumer.run().catch(err => {
+    logger.error('Error al iniciar authLoginConsumer:', err);
+});
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerOptions)));
 app.use('/logout', logoutRoutes);

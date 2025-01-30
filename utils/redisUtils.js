@@ -1,11 +1,22 @@
 const redisClient = require('../config/redisConfig');
 const logger = require('../config/logger');
 
+const EXPIRATION_TIME = 3600; // 1 hora en segundos
+
 const redisUtils = {
-  async setToken(userId, token, expirationTime = 3600) {
+  async setToken(userId, token) {
     try {
-      await redisClient.set(userId, token, { EX: expirationTime });
-      logger.info(`Token establecido para usuario ${userId}`);
+      const userIdStr = String(userId);
+      const tokenStr = String(token);
+
+      await new Promise((resolve, reject) => {
+        redisClient.set(userIdStr, tokenStr, 'EX', EXPIRATION_TIME, (err, reply) => {
+          if (err) reject(err);
+          resolve(reply);
+        });
+      });
+      
+      logger.info(`Token establecido para usuario ${userIdStr} con expiración de ${EXPIRATION_TIME} segundos`);
     } catch (error) {
       logger.error('Error al establecer token en Redis:', error);
       throw error;

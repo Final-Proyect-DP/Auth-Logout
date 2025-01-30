@@ -7,11 +7,11 @@ const producer = kafka.producer();
 
 const sendLoginMessage = async (userId, token) => {
   try {
-    const messageData = { userId, token, timestamp: new Date().toISOString() };
+    const messageData = { userId, token};
     const encryptedMessage = encrypt(messageData);
 
     await producer.send({
-      topic: process.env.KAFKA_TOPIC_LOGIN,
+      topic: process.env.KAFKA_TOPIC_LOGOUT,
       messages: [
         {
           key: userId,
@@ -19,7 +19,7 @@ const sendLoginMessage = async (userId, token) => {
         },
       ],
     });
-    logger.info(`Mensaje de login encriptado enviado para usuario ${userId}`);
+    logger.info(`Mensaje de logout encriptado enviado para usuario ${userId}`);
   } catch (error) {
     const handledError = handleErrors(error, userId);
     logger.error(`Error al enviar mensaje de login: ${handledError.response.message}`);
