@@ -1,14 +1,14 @@
 require('dotenv').config();
 const express = require('express');
-const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const swaggerJsDoc = require('swagger-jsdoc');
 const logoutRoutes = require('./routes/logoutRoutes');
+const logger = require('./config/logger');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(bodyParser.json());
+app.use(express.json());
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -16,22 +16,14 @@ const swaggerOptions = {
         info: {
             title: 'Logout API',
             version: '1.0.0',
-            description: 'API para desloguear usuarios'
+            description: 'API para gestión de cierre de sesión'
         },
-        servers: [
-            {
-                url: `http://localhost:${PORT}`
-            }
-        ]
+        servers: [{ url: `http://localhost:${PORT}` }]
     },
     apis: ['./routes/*.js']
 };
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerOptions)));
 app.use('/logout', logoutRoutes);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+app.listen(PORT, () => logger.info(`Servidor iniciado en puerto ${PORT}`));

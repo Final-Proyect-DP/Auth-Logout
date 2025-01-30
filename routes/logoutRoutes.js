@@ -1,54 +1,34 @@
 const express = require('express');
 const router = express.Router();
+const { verifyToken } = require('../middleware/authMiddleware');
 const logoutController = require('../controllers/logoutController');
 
 /**
  * @swagger
- * /logout/{userId}/{token}:
+ * /logout/{id}:
  *   post:
  *     summary: Desloguear un usuario
  *     parameters:
  *       - in: path
- *         name: userId
+ *         name: id
  *         required: true
  *         schema:
  *           type: string
  *         description: ID del usuario
- *       - in: path
+ *       - in: query
  *         name: token
  *         required: true
  *         schema:
  *           type: string
- *         description: Token JWT del usuario
+ *         description: Token JWT
  *     responses:
  *       200:
- *         description: Usuario deslogueado exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *       400:
- *         description: User ID y token son requeridos
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
+ *         description: Sesión cerrada exitosamente
+ *       401:
+ *         description: Token inválido o expirado
  *       500:
- *         description: Error al desloguear usuario
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
+ *         description: Error del servidor
  */
-router.post('/:userId/:token', logoutController.logoutUser);
+router.post('/:id', verifyToken, logoutController.logoutUser);
 
 module.exports = router;
