@@ -6,6 +6,7 @@ const logoutRoutes = require('./routes/logoutRoutes');
 const logger = require('./config/logger');
 const authLoginConsumer = require('./consumers/authLoginConsumer');
 
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 

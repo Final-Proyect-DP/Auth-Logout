@@ -5,7 +5,7 @@ const handleErrors = require('../utils/handleErrors');
 
 const producer = kafka.producer();
 
-const sendLoginMessage = async (userId, token) => {
+const sendLogoutMessage = async (userId, token) => {
   try {
     const messageData = { userId, token};
     const encryptedMessage = encrypt(messageData);
@@ -33,4 +33,4 @@ producer.connect().catch(err => {
   logger.error(`Error conectando el productor Kafka: ${handledError.response.message}`);
 });
 
-module.exports = { sendLoginMessage };
+module.exports = { sendLogoutMessage };

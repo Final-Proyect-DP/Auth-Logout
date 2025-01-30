@@ -30,6 +30,8 @@ const verifyToken = async (req, res, next) => {
     }
 
     req.userId = id;
+
+    
     next();
   } catch (err) {
     const error = handleErrors(err);
