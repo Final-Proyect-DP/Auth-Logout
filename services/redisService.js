@@ -4,9 +4,9 @@ const logger = require('../config/logger');
 const storeUserSession = async (userId, token) => {
   try {
     await redis.set(userId, token);
-    logger.info(`Sesión almacenada en Redis para usuario: ${userId}`);
+    logger.info(`Session stored in Redis for user: ${userId}`);
   } catch (error) {
-    logger.error(`Error almacenando sesión en Redis: ${error.message}`);
+    logger.error(`Error storing session in Redis: ${error.message}`);
     throw error;
   }
 };

@@ -5,12 +5,12 @@ const logger = require('../config/logger');
 async function logoutUser(userId) {
     try {
         const result = await deleteFromRedis(userId);
-        const message = result ? 'Sesión cerrada exitosamente' : 'Sesión no encontrada';
-        logger.info(`${message} para usuario ${userId}`);
+        const message = result ? 'Session successfully closed' : 'Session not found';
+        logger.info(`${message} for user ${userId}`);
         return message;
     } catch (error) {
-        logger.error(`Error en logout: ${error.message}`);
-        throw new Error('Error al cerrar sesión');
+        logger.error(`Logout error: ${error.message}`);
+        throw new Error('Error closing session');
     }
 }
 

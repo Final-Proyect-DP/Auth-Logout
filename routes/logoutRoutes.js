@@ -7,27 +7,27 @@ const logoutController = require('../controllers/logoutController');
  * @swagger
  * /logout/{id}:
  *   post:
- *     summary: Desloguear un usuario
+ *     summary: Logout a user
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: ID del usuario
+ *         description: User ID
  *       - in: query
  *         name: token
  *         required: true
  *         schema:
  *           type: string
- *         description: Token JWT
+ *         description: JWT Token
  *     responses:
  *       200:
- *         description: Sesión cerrada exitosamente
+ *         description: Session successfully closed
  *       401:
- *         description: Token inválido o expirado
+ *         description: Invalid or expired token
  *       500:
- *         description: Error del servidor
+ *         description: Server error
  */
 router.post('/:id', verifyToken, logoutController.logoutUser);
 
