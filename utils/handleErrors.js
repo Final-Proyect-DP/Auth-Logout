@@ -3,7 +3,6 @@ const logger = require('../config/logger'); // Actualizar la ruta
 const handleErrors = (error, id = '') => {
   logger.error(`Error in operation ${id ? `for ID ${id}` : ''}:`, error);
 
-  // Errores de JWT
   if (error.name === 'JsonWebTokenError') {
     return {
       status: 401,
@@ -24,7 +23,7 @@ const handleErrors = (error, id = '') => {
     };
   }
 
-  // Error de sesión
+
   if (error.message === 'Invalid or expired session') {
     return {
       status: 401,
@@ -35,7 +34,6 @@ const handleErrors = (error, id = '') => {
     };
   }
 
-  // Error de Redis
   if (error.message.includes('Redis')) {
     return {
       status: 500,
@@ -46,7 +44,6 @@ const handleErrors = (error, id = '') => {
     };
   }
 
-  // Error por defecto (500 Internal Server Error)
   return {
     status: 500,
     response: {

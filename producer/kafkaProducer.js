@@ -7,7 +7,7 @@ const producer = kafka.producer();
 
 const sendLogoutMessage = async (userId, token) => {
   try {
-    const messageData = { userId, token};
+    const messageData = { userId, token };
     const encryptedMessage = encrypt(messageData);
 
     await producer.send({
@@ -19,18 +19,18 @@ const sendLogoutMessage = async (userId, token) => {
         },
       ],
     });
-    logger.info(`Mensaje de logout encriptado enviado para usuario ${userId}`);
+    logger.info(`Encrypted logout message sent for user ${userId}`);
   } catch (error) {
     const handledError = handleErrors(error, userId);
-    logger.error(`Error al enviar mensaje de login: ${handledError.response.message}`);
+    logger.error(`Error sending logout message: ${handledError.response.message}`);
     throw handledError;
   }
 };
 
-// Inicializar el productor
+// Initialize producer
 producer.connect().catch(err => {
   const handledError = handleErrors(err);
-  logger.error(`Error conectando el productor Kafka: ${handledError.response.message}`);
+  logger.error(`Kafka producer connection error: ${handledError.response.message}`);
 });
 
 module.exports = { sendLogoutMessage };

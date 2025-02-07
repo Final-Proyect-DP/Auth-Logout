@@ -19,9 +19,9 @@ jobs:
       - name: edit .env file
         env:
           PORT: ${{ secrets.PORT }}
+          HOST: ${{ secrets.HOST }}
           JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          REDIS_HOST: ${{ secrets.REDIS_HOST }}
-          REDIS_PORT: ${{ secrets.REDIS_PORT }}
+          REDIS_URL: ${{ secrets.REDIS_URL }}
           KAFKA_BROKER: ${{ secrets.KAFKA_BROKER }}
           KAFKA_CLIENT_ID: ${{ secrets.KAFKA_CLIENT_ID }}
           KAFKA_TOPIC_LOGOUT: ${{ secrets.KAFKA_TOPIC_LOGOUT }}
@@ -31,7 +31,7 @@ jobs:
         run: |
           echo "PORT=${PORT}" > .env
           echo "JWT_SECRET=${JWT_SECRET}" >> .env
-          echo "REDIS_HOST=${REDIS_HOST}" >> .env
+          echo "REDIS_URL=${REDIS_URL}" >> .env
           echo "REDIS_PORT=${REDIS_PORT}" >> .env
           echo "KAFKA_BROKER=${KAFKA_BROKER}" >> .env
           echo "KAFKA_CLIENT_ID=${KAFKA_CLIENT_ID}" >> .env
@@ -73,7 +73,7 @@ jobs:
     strategy:
       matrix:
         ec2_instance: 
-          - ec2-54-211-198-185.compute-1.amazonaws.com
+          - ec2-18-214-162-122.compute-1.amazonaws.com
 
     steps:
       - name: Deploy Container

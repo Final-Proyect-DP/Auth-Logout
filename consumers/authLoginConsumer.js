@@ -4,33 +4,32 @@ const userService = require('../services/userService');
 const redisUtils = require('../utils/redisUtils');
 require('dotenv').config();
 
-const consumer = kafka.consumer({ groupId: 'logout-service-login-group' });
+const consumer = kafka.consumer({ groupId: 'Auth-Edit-Login-Consumer' });
 
 const run = async () => {
   try {
     await consumer.connect();
-    logger.info('Create Consumer: Kafka consumer connected');
+    logger.info('Kafka consumer connected successfully');
     await consumer.subscribe({ topic: process.env.KAFKA_TOPIC_LOGIN, fromBeginning: true });
-    logger.info(`Create Consumer: Subscribed to topic: ${process.env.KAFKA_TOPIC_LOGIN}`);
+    logger.info(`Subscribed to topic: ${process.env.KAFKA_TOPIC_LOGIN}`);
 
     await consumer.run({
       eachMessage: async ({ topic, partition, message }) => {
         try {
           const encryptedMessage = JSON.parse(message.value.toString());
           const decryptedMessage = userService.decryptMessage(encryptedMessage);
-          logger.info('Mensaje descifrado:', decryptedMessage);
+          logger.info('Message decrypted successfully');
 
           const { userId, token } = decryptedMessage;
           if (!userId || !token) {
-            throw new Error('Mensaje no contiene userId o token');
+            throw new Error('Message missing userId or token');
           }
 
-          // Usar redisUtils.setToken en lugar de storeUserSession
           await redisUtils.setToken(userId, token);
-          logger.info(`Token almacenado en Redis para usuario ${userId}`);
+          logger.info(`Token stored in Redis for user ${userId}`);
 
         } catch (error) {
-          logger.error('Error procesando mensaje:', {
+          logger.error('Error processing message:', {
             error: error.message,
             stack: error.stack
           });
@@ -38,7 +37,7 @@ const run = async () => {
       },
     });
   } catch (error) {
-    logger.error('login Consumer: Error iniciando el consumidor:', error);
+    logger.error('Consumer initialization error:', error);
     throw error;
   }
 };
