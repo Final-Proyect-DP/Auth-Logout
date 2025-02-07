@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 
 const corsOptions = {
-  origin: '*', // En producción, especifica los orígenes permitidos
+  origin: '*', 
   methods: ['GET', 'POST'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
@@ -21,6 +21,11 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(express.json());
+
+app.get('/health', (req, res) => {
+    res.status(200).json({ status: 'OK', service: 'auth-logout' });
+  });
+  
 
 authLoginConsumer.run().catch(err => {
     logger.error('Error al iniciar authLoginConsumer:', err);
