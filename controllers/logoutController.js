@@ -1,25 +1,18 @@
-const logoutService = require('../services/logoutService');
-const logger = require('../logger');
+const { deleteToken } = require('../utils/redisUtils');
+const handleErrors = require('../utils/handleErrors');
+const {sendLogoutMessage } = require('../producer/kafkaProducer');
 
 async function logoutUser(req, res) {
-    const { userId, token } = req.params;
-
-    if (!userId || !token) {
-        const message = 'User ID and token are required';
-        logger.warn(message);
-        return res.status(400).json({ message });
-    }
-
     try {
-        const message = await logoutService.logoutUser(userId, token);
-        res.status(200).json({ message });
+        sendLogoutMessage(req.userId, req.token);
+        
+        const result = await deleteToken(req.userId);
+        res.status(200).json(result);
     } catch (error) {
-        const message = `Error logging out user: ${error.message}`;
-        logger.error(message);
-        res.status(500).json({ message });
+        const handledError = handleErrors(error);
+        res.status(handledError.status).json(handledError.response);
     }
+
 }
 
-module.exports = {
-    logoutUser
-};
+module.exports = { logoutUser };
